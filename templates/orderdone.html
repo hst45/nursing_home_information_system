@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>养老院信息管理平台</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- bootstrap -->
+    <link href="{% static "plugins/bootstrap.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-responsive.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-overrides.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- libraries -->
+    <link href="{% static "css/lib/jquery-ui-1.10.2.custom.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "css/lib/font-awesome.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/layout.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/elements.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/icons.css" %}" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="{% static "css/compiled/index.css" %}" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+
+    <!-- lato font -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css' />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <script src = "{% static 'js/echarts.min.js' %}"></script>
+    <![endif]-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <!-- navbar -->
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <button type="button" class="btn btn-navbar visible-phone" id="menu-toggler">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <li style="margin-bottom:-30px; margin-top:20px"><font size="6px" color="white" >养老院信息管理平台</font></li>
+            <ul class="nav pull-right">
+
+                <li class="notification-dropdown hidden-phone">
+                    <a href="" title="传呼" class="trigger">
+                        <i class="icon-warning-sign"></i>
+                        <span class="count">{{num}}</span>
+                    </a>
+                    <div class="pop-dialog">
+                        <div class="pointer right">
+                            <div class="arrow"></div>
+                            <div class="arrow_border"></div>
+                        </div>
+                        <div class="body">
+                            <a href="#" class="close-icon" title="传呼"><i class="icon-remove-sign"></i></a>
+                            <div class="notifications">
+                                <h3>你有{{ num }}条未读消息</h3>
+                                {% for i in item %}
+                                <a href="/call?id={{ i.id }}" class="item">
+                                    <i class="icon-signin"></i> {{ i.old.name }}正在{{ i.location }}传呼
+                                    <span class="time"><i class="icon-time"></i> {{ i.time }}</span>
+                                </a>
+                                {% endfor %}
+                                <div class="footer">
+                                    <a href="#" class="logout">查看全部消息</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="settings hidden-phone">
+                    <a href="/logout/" role="button" title="退出登录">
+                        <i class="icon-share-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- end navbar -->
+
+    <!-- sidebar -->
+    <div id="sidebar-nav" style="font-size:18px;">
+        <ul id="dashboard-menu">
+            <li>
+                <a href="/index0/">
+                    <i class="icon-home" ></i>
+                    <span>护工主页</span>
+                </a>
+
+            </li>
+            <br>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-signal"></i>
+                    <span>人员</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu" style="font-size:15px;">
+                    <li ><a href="/index/" style="font-size:15px;">查看老人信息</a></li>
+                    <li><a href="/procedure.html/" style="font-size:15px;">查看监护人信息</a></li>
+                </ul>
+            </li>
+             <br>
+            <li class="active">
+                <div class="pointer">
+                    <div class="arrow"></div>
+                    <div class="arrow_border"></div>
+                </div>
+                <a href="/orderdone/">
+                    <i class="icon-edit"></i>
+                    <span>订单</span>
+                </a>
+            </li>
+            <br>
+            <li>
+                <a href='' title="健康数据请从老人信息进入查看">
+                    <i class="icon-th-large"></i>
+                    <span>健康检查</span>
+                </a>
+            </li>
+            <br>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-group"></i>
+                    <span>活动</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="/form.html/" style="font-size:15px;">添加活动</a></li>
+                    <li><a href="/activitynum.html/" style="font-size:15px;">安排活动人员</a></li>
+                    <li><a href="/calendar.html/" style="font-size:15px;">查看日程</a></li>
+                    <li><a href="/place.html/" style="font-size:15px;">活动室</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- end sidebar -->
+
+
+	<!-- main container -->
+    <div class="content">
+
+        <!-- settings changer -->
+        <div class="container-fluid">
+            <div id="pad-wrapper">
+                
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div class="table-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4 style="font-size:25px;">订单</h4>
+                        </div>
+                    </div>
+                    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+                     <div id="main0" style="height: 500%"></div>
+                    <script type="text/javascript">
+                        var dom = document.getElementById("main0");
+                        var myChart = echarts.init(dom);
+                        var app = {};
+
+                        var option;
+
+
+
+                        setTimeout(function () {
+
+                            option = {
+                                legend: {},
+                                tooltip: {
+                                    trigger: 'axis',
+                                    showContent: false
+                                },
+                                dataset: {
+                                    source: [
+                                        ['product', '三天前', '一个月前','三个月前', '一年前'],
+                                        {% for item in whole %}
+                                        [{% for o in item %}
+                                        '{{ o}}',
+                                        {% endfor %}],
+                                        {% endfor %}
+
+                                    ]
+                                },
+                                xAxis: {type: 'category'},
+                                yAxis: {gridIndex: 0},
+                                grid: {top: '55%'},
+                                series: [
+                                    {% for item in whole %}
+                                    {type: 'line', smooth: true, seriesLayoutBy: 'row', emphasis: {focus: 'series'}},
+                                    {% endfor %}
+                                    {
+                                        type: 'pie',
+                                        id: 'pie',
+                                        radius: '30%',
+                                        center: ['50%', '25%'],
+                                        emphasis: {focus: 'data'},
+                                        label: {
+                                            formatter: '{b}: {@2012} ({d}%)'
+                                        },
+                                        encode: {
+                                            itemName: 'product',
+                                            value: '2012',
+                                            tooltip: '2012'
+                                        }
+                                    }
+                                ]
+                            };
+
+                            myChart.on('updateAxisPointer', function (event) {
+                                var xAxisInfo = event.axesInfo[0];
+                                if (xAxisInfo) {
+                                    var dimension = xAxisInfo.value + 1;
+                                    myChart.setOption({
+                                        series: {
+                                            id: 'pie',
+                                            label: {
+                                                formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                                            },
+                                            encode: {
+                                                value: dimension,
+                                                tooltip: dimension
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+                            myChart.setOption(option);
+
+                        });
+
+                        if (option && typeof option === 'object') {
+                            myChart.setOption(option);
+                        }
+
+                                </script>
+                    <br/><br/>
+                    <div class="row-fluid">
+                        <table class="table table-hover" style="font-size:16px;">
+                            <thead>
+                                <tr>
+                                    <th class="span3" style="font-size:18px;">
+                                        订单编号
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>时间
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>总价
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>位置
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>状态
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for items in orders %}
+                                <!-- row -->
+                                <tr>
+                                    <td>
+                                        <a href="/detaildone?orderid={{items.id}}" class="name">{{items.id}}</a>
+                                    </td>
+                                    <td class="description">
+                                        {{items.time}}
+                                    </td>
+                                    <td class="description">
+                                        {{items.totalprice}}
+                                    </td>
+                                    <td class="description">
+                                        {{items.location}}
+                                    </td>
+                                    <td>
+                                        {% if items.status == '0' %}
+                                        未送达
+                                        <form action="/orderdone/orderstate/" method="POST">
+                                            {% csrf_token %}
+                                            <br>
+                                            <button name="state" value={{items.id}}>配送</button>
+                                        </form>
+                                        {% else %}
+                                        已送达
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end products table -->
+
+                <!-- users table -->
+                <div class="table-wrapper users-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4 id="detail" style="font-size:25px;">详情：{{p}}</h4>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row-fluid">
+                        <table class="table table-hover" style="font-size:16px;">
+                            <thead>
+                                <tr>
+                                    <th class="span3" style="font-size:18px;">
+                                        商品名
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>数量
+                                    </th>
+                                    <th class="span4" style="font-size:18px;">
+                                        <span class="line"></span>价格
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- row -->
+                               {% for item in details %}
+                                <tr>
+                                    <td>
+                                        <span class="subtext">{{item.name}}</span>
+                                    </td>
+                                    <td>
+                                        {{item.num}}
+                                    </td>
+                                    <td>
+                                        ￥ {{item.price}}.00
+                                    </td>
+                                </tr>
+                               {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end users table -->
+            </div>
+        </div>
+    </div>
+    <!-- end main container -->
+
+	<!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/theme.js" %}"></script>
+     <script type="text/javascript">{{script}}('{{alert}}')</script>
+<!--    <script>-->
+<!--        function submitForm(){-->
+<!--            var form = document.getElementById("stateform");-->
+<!--            form.submit();-->
+<!--        }-->
+<!--    </script>-->
+
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>养老院信息管理平台</title>
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+    <!-- bootstrap -->
+    <link href="{% static "plugins/bootstrap.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-responsive.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-overrides.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- libraries -->
+    <link href="{% static "css/lib/jquery-ui-1.10.2.custom.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "css/lib/font-awesome.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/layout.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/elements.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/icons.css" %}" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="{% static "css/compiled/index.css" %}" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+
+    <!-- lato font -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css' />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body>
+
+    <!-- navbar -->
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <button type="button" class="btn btn-navbar visible-phone" id="menu-toggler">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <li style="margin-bottom:-30px; margin-top:20px"><font size="6px" color="white" >养老院信息管理平台</font></li>
+            <ul class="nav pull-right">
+
+                <li class="notification-dropdown hidden-phone">
+                    <a href="" title="传呼" class="trigger">
+                        <i class="icon-warning-sign"></i>
+                        <span class="count">{{num}}</span>
+                    </a>
+                    <div class="pop-dialog">
+                        <div class="pointer right">
+                            <div class="arrow"></div>
+                            <div class="arrow_border"></div>
+                        </div>
+                        <div class="body">
+                            <a href="#" class="close-icon" title="传呼"><i class="icon-remove-sign"></i></a>
+                            <div class="notifications">
+                                <h3>你有{{ num }}条未读消息</h3>
+                                {% for i in item %}
+                                <a href="/call?id={{ i.id }}" class="item">
+                                    <i class="icon-signin"></i> {{ i.old.name }}正在{{ i.location }}传呼
+                                    <span class="time"><i class="icon-time"></i> {{ i.time }}</span>
+                                </a>
+                                {% endfor %}
+                                <div class="footer">
+                                    <a href="#" class="logout">查看全部消息</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="settings hidden-phone">
+                    <a href="/logout/" role="button" title="退出登录">
+                        <i class="icon-share-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- end navbar -->
+
+    <!-- sidebar -->
+    <div id="sidebar-nav" style="font-size:18px;">
+        <ul id="dashboard-menu">
+            <li>
+                <a href="/index0/">
+                    <i class="icon-home" ></i>
+                    <span>护工主页</span>
+                </a>
+
+            </li>
+            <br>
+            <li class="active">
+                <div class="pointer">
+                    <div class="arrow"></div>
+                    <div class="arrow_border"></div>
+                </div>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-signal"></i>
+                    <span>人员</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu" style="font-size:15px;">
+                    <li ><a href="/index/" style="font-size:15px;">查看老人信息</a></li>
+                    <li><a href="/procedure.html/" style="font-size:15px;">查看监护人信息</a></li>
+                </ul>
+            </li>
+             <br>
+            <li>
+                <a href="/orderdone/">
+                    <i class="icon-edit"></i>
+                    <span>订单</span>
+                </a>
+            </li>
+            <br>
+            <li>
+                <a href='' title="健康数据请从老人信息进入查看">
+                    <i class="icon-th-large"></i>
+                    <span>健康检查</span>
+                </a>
+            </li>
+            <br>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-group"></i>
+                    <span>活动</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="/form.html/" style="font-size:15px;">添加活动</a></li>
+                    <li><a href="/activitynum.html/" style="font-size:15px;">安排活动人员</a></li>
+                    <li><a href="/calendar.html/" style="font-size:15px;">查看日程</a></li>
+                    <li><a href="/place.html/" style="font-size:15px;">活动室</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- end sidebar -->
+
+
+	<!-- main container -->
+    <div class="content">
+        <div class="container-fluid">
+            <div id="pad-wrapper" class="users-list">
+                <!-- table sample -->
+                <!-- the script for the toggle all checkboxes from header is located in ../statics/js/theme.js -->
+                <div class="table-products section">
+                    <div class="row-fluid head">
+                        <div class="span12" style="font-size:30px;">
+                            <h4 style="font-size:30px;">老人信息 <small style="font-size:20px;">(只能查看我负责的老人)</small></h4>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid filter-block">
+                        <div class="pull-right">
+						<form  method="post" action='/index/'>
+                            {% csrf_token %}
+							<input type="text" class="search" name="search" id="search" />
+							<input type="submit" class="btn-flat new-product" value="搜索"/>
+						</form>
+                        </div>
+                    </div>
+
+                    <div class="row-fluid">
+                        <table class="table table-hover" style="font-size:18px;">
+                            <thead style="font-size:15px;">
+                                <tr style="font-size:15px;">
+                                     <th class="span2">
+
+                                    </th>
+                                    <th class="span3" style="font-size:19.5px;">
+                                        老人编号
+                                    </th>
+                                    <th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>姓名
+                                    </th>
+                                    <th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>身份证号
+                                    </th>
+                                    <th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>性别
+                                    </th>
+									<th class="span3" style="font-size:19px;">
+										<span class="line"></span>生日
+                                    </th>
+									<th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>银行卡号
+                                    </th>
+									<th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>宿舍号
+                                    </th>
+<!--									<th class="span3">-->
+<!--                                        <span class="line"></span>监护人2身份证号-->
+<!--                                    </th>-->
+                                    <th class="span3" style="font-size:19px;">
+                                        <span class="line"></span>
+                                    </th>
+                                </tr>
+                            </thead>
+			        {% for item in list %}
+                            <tbody>
+                                <!-- row -->
+                                <tr class="first">
+                                    <td>
+                                        <img src='{% static item.head %}' class="img-circle avatar hidden-phone" />
+                                    </td>
+                                    <td>
+                                        {{ item.id }}
+                                    </td>
+                                    <td class="description">
+                                        {{ item.name }}
+                                    </td>
+									<td>
+                                        {{ item.idcard }}
+                                    </td>
+                                    <td class="description">
+                                        {% if item.gender == 'M' %} 男
+                                        {% else %} 女
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                       {{ item.birthday }}
+                                    </td>
+									<td>
+                                       {{ item.bankcard }}
+                                    </td>
+                                    <td class="description">
+                                        {{ item.dorm }}
+                                    </td>
+<!--									<td>-->
+<!--                                       {{ item.guardian2 }}-->
+<!--                                    </td>-->
+
+                                    <td>
+                                        <ul class="actions">
+                                            <li class="last"><a href="/chart.html?oid={{ item.id }}">查看体检数据</a></li>
+                                            <li class="last"><a href="/edit2.html?idcard={{ item.id }}">编辑</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="pagination">
+                      <ul>
+                        <li><a href="#">&#8249;</a></li>
+                        <li><a class="active" href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">&#8250;</a></li>
+                      </ul>
+                    </div>
+                </div>
+                <!-- end table sample -->
+            </div>
+        </div>
+    </div>
+
+<!-- scripts -->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/jquery-ui-1.10.2.custom.min.js" %}"></script>
+    <!-- knob -->
+    <script src="{% static "js/jquery.knob.js" %}"></script>
+    <!-- flot charts -->
+    <script src="{% static "js/jquery.flot.js" %}"></script>
+    <script src="{% static "js/jquery.flot.stack.js" %}"></script>
+    <script src="{% static "js/jquery.flot.resize.js" %}"></script>
+    <script src="{% static "js/theme.js" %}"></script>
+    <script type="text/javascript">{{script}} ('{{alert}}')</script>
+    <script>
+        $('#b1').click(function(){
+        $.ajax({
+		url:'/idnex/',
+		type: 'post',
+		data: {
+		    1标签id
+        }:$('#1标签id').val(),2标签id:$('#2标签id').val()},
+		// 4. ajax是异步提交，所以需要给一个回调函数来处理返回的结果
+		success:function(data){// data就是异步提交的返回结果
+						// 将异步回调函数的结果通过DOM操作渲染到第三个input框中
+						$(3标签id).val(data)
+		}
+})
+
+
+
+
+
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+</body>
+</html>

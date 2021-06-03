@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>登陆界面</title>
+    
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+    <!-- bootstrap -->
+    <link href="{% static "css/bootstrap/bootstrap.css" %}" rel="stylesheet" />
+    <link href="{% static "css/bootstrap/bootstrap-responsive.css" %}" rel="stylesheet" />
+    <link href="{% static "css/bootstrap/bootstrap-overrides.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/layout.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/elements.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/icons.css" %}" />
+
+    <!-- libraries -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/lib/font-awesome.css" %}" />
+    
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="{% static "css/compiled/signin.css" %}" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body background="{% static "img/bg.jpg" %}" style="background-size: cover;" >
+
+
+
+
+
+    <div class="row-fluid login-wrapper">
+        <div class="span4 box" style="margin:0 auto;">
+            <div class="content-wrap">
+                <h6>用户登录</h6>
+                <form method="post" action="/signin.html/">
+                    {% csrf_token %}
+                    <label style="float: left">选择登录身份：</label>
+                    <select style="width:200px; margin: 0; height: 30px" class="select2" name="identity">
+                        <option />
+                        <option value= '1'>管理员
+                        <option value= '2'>老人
+                        <option value= '3'>护工
+                    </select>
+                    <br/>
+                    <br/>
+                    <input class="span12" type="text" placeholder="用户id" name="id" />
+                    <input class="span12" type="password" placeholder="密码" name="password" />
+                <a href="#" class="forgot">忘记密码?</a>
+                <div class="remember">
+                    <input id="remember-me" type="checkbox" />
+                    <label for="remember-me">记住我</label>
+                </div>
+                <input type="submit" class="btn-glow primary login" value="登录" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+	<!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/theme.js" %}"></script>
+    <script type="text/javascript">{{script}}('{{wrong}}')</script>
+
+
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+</body>
+</html>

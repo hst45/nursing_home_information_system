@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>养老院信息管理平台</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- bootstrap -->
+    <link href="{% static "plugins/bootstrap.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-responsive.css" %}" rel="stylesheet" />
+    <link href="{% static "plugins/bootstrap-overrides.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- libraries -->
+    <link href="{% static "css/lib/jquery-ui-1.10.2.custom.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "css/lib/font-awesome.css" %}" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/layout.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/elements.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "css/icons.css" %}" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="{% static "css/compiled/index.css" %}" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css' />
+
+    <!-- lato font -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css' />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src = "{% static 'js/echarts.min.js' %}"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <!-- navbar -->
+    <div class="navbar navbar-inverse">
+        <div class="navbar-inner">
+            <button type="button" class="btn btn-navbar visible-phone" id="menu-toggler">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <li style="margin-bottom:-30px; margin-top:20px"><font size="6px" color="white" >养老院信息管理平台</font></li>
+
+            <ul class="nav pull-right">
+
+                <li class="notification-dropdown hidden-phone">
+                    <a href="#" class="trigger">
+                        <i class="icon-warning-sign"></i>
+                        <span class="count"></span>
+                    </a>
+                    <div class="pop-dialog">
+                        <div class="pointer right">
+                            <div class="arrow"></div>
+                            <div class="arrow_border"></div>
+                        </div>
+                        <div class="body">
+                            <a href={% url 'call' %} class="close-icon"><i class="icon-remove-sign"></i></a>
+                            <div class="notifications">
+                                <h3>You have new notifications</h3>
+                                {% for item in call %}
+                                <a href="#" class="item">
+                                    <i class="icon-signin"></i> {{item.note}}
+                                    <span class="time">{{item.location}}   <i class="icon-time"></i> {{item.time}}</span>
+                                </a>
+                                {% endfor%}
+                                <div class="footer">
+<!--                                    <a href="#" class="logout">View all notifications</a>-->
+                                    <form action="/index/addcall/" method="POST">
+                                        {% csrf_token %}
+
+                                        地点：<input type="text" name="title"/><br/>
+                                        备注：<textarea name="content"></textarea><br/>
+                                        <button>添加</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="notification-dropdown hidden-phone">
+                    <a href="#" class="trigger">
+                        <i class="icon-envelope-alt"></i>
+                    </a>
+                    <div class="pop-dialog">
+                        <div class="pointer right">
+                            <div class="arrow"></div>
+                            <div class="arrow_border"></div>
+                        </div>
+                        <div class="body">
+                            <a href={% url 'call' %} class="close-icon"><i class="icon-remove-sign"></i></a>
+                            <div class="messages">
+                                {% for item in note %}
+                                <a href={% url 'call' %} class="item">
+                                    <img src='{% static item.other.head %}' class="display" style="width:55px;" />
+                                    <div class="name">{{item.other.name}}</div>
+                                    <div class="msg">
+                                        {{item.note}}
+                                    </div>
+                                    <span class="time"><i class="icon-time"></i> {{item.time}}</span>
+                                </a>
+                                {% endfor%}
+                                <div class="footer">
+<!--                                    <a href="#" class="logout">View all notifications</a>-->
+                                    <form action="/index/addnote/" method="POST">
+                                        {% csrf_token %}
+
+                                        <div class="field-box">
+                                            <br>
+                                            <label style="float:left">收件人：</label>
+                                            <select style="width:150px" class="select2" name="other">
+                                                <option />
+                                                {% for i in notme %}
+                                                <option value= {{ i.id }}>{{i.name}}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <div class="field-box">
+                                            <label style="float:left"> 内容：</label>
+                                            <textarea name="content" style="width:150px;"></textarea><br/>
+                                        </div>
+                                            <br>
+                                        <div class="ui-group">
+                                            <button class="btn-flat primary">发送</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li class="settings hidden-phone">
+                    <a href="/logout/" role="button" title="退出登录">
+                        <i class="icon-share-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- end navbar -->
+
+    <!-- sidebar -->
+    <div id="sidebar-nav" style="font-size:17px;">
+        <ul id="dashboard-menu">
+             <li>
+                 <a href={% url 'index' %} >
+                 <i class="icon-home"></i>
+                 <span>主页</span>
+                 </a>
+            </li>
+            <br>
+            <li>
+                <a href={% url 'oldinfo' %}>
+                    <i class="icon-group"></i>
+                    <span>老人信息</span>
+                </a>
+            </li>
+            <br>
+            <li class="active">
+                <div class="pointer">
+                    <div class="arrow"></div>
+                    <div class="arrow_border"></div>
+                </div>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-edit"></i>
+                    <span>买东西</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href={% url 'goodlist' %}>选择商品</a></li>
+                    <li><a href={% url 'order' %}>查看订单</a></li>
+                </ul>
+            </li>
+            <br/>
+            <li>
+                <a href={% url 'dailycheck' %}>
+                    <i class="icon-th-large"></i>
+                    <span>健康检查</span>
+                </a>
+            </li>
+            <br/>
+            <li>
+                <a class="dropdown-toggle" href="#">
+                    <i class="icon-calendar-empty"></i>
+                    <span>活动</span>
+                    <i class="icon-chevron-down"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href={% url 'actlist' %}>选择活动</a></li>
+                    <li><a href={% url 'calender' %}>我的日程</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- end sidebar -->
+
+
+	<!-- main container -->
+    <div class="content">
+        
+        <!-- settings changer -->
+        <div class="container-fluid">
+            <div id="pad-wrapper">
+                
+                <!-- products table-->
+                <!-- the script for the toggle all checkboxes from header is located in js/theme.js -->
+                <div id="main0" style="width: 900px;height: 600px;margin-left:auto;margin-right:auto;"></div>
+                  <script type="text/javascript">
+
+                      var myChar = echarts.init(document.getElementById('main0'));
+                      var option = {
+
+                          title:{
+                              text:'消费分析',
+                              subtext: '按类别统计',
+                              x: 'left'
+                          },
+                      legend: {
+                              data: ['消费金额']
+                          },
+                          xAxis:{
+                              type: 'category',
+                              data:[
+                                  {% for SQL_datum in result %}
+                                  '{{ SQL_datum.0 }}',
+                                  {% endfor %}],
+                              name:"类别",
+
+                          },
+                          yAxis:{
+                              type: 'value',
+                          },
+                          tooltip: {
+                              trigger: 'axis'   // axis   item   none三个值
+                               },
+                          series:[
+                              {
+                              type: 'bar',
+                              data:[{% for SQL_datum in result %}
+                                  {{ SQL_datum.1 }},
+                              {% endfor %}],
+                              name:"消费金额",
+                              },
+
+                          ]
+
+                      };
+                      myChar.setOption(option);
+                  </script>
+                <br>
+                 <div id="month_sum" style="width: 900px;height: 600px;margin-left:auto;margin-right:auto;"></div>
+                  <script type="text/javascript">
+                        var myChart2 = echarts.init(document.getElementById('month_sum'));
+                        var option;
+                        var date = new Date();
+                        var y = String(date.getFullYear());
+                        option = {
+                            title: {
+                                text: '月度消费'
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data: [y]
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            toolbox: {
+                                feature: {
+                                    saveAsImage: {}
+                                }
+                            },
+                            xAxis: {
+                                name: '月份',
+                                type: 'category',
+                                data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月',
+                                '八月','九月','十月','十一月','十二月'],
+                            },
+                            yAxis: {
+                                type: 'value',
+                                name: '消费',
+                            },
+                            series: [
+                                {
+                                    name: y,
+                                    type: 'line',
+                                    step: 'middle',
+                                    data: [{%for i in monthsum%}
+                                           {{i}},
+                                           {%endfor%}
+                                    ]
+                                },
+                            ]
+                        };
+
+                        myChart2.setOption(option);
+
+                  </script>
+                <div class="table-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4 style="font-size:25px;">订单</h4>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row-fluid">
+                        <table class="table table-hover" style="font-size:16px;">
+                            <thead>
+                                <tr>
+                                    <th class="span3" style="font-size:18px;">
+                                        订单编号
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>时间
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>总价
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>位置
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>状态
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for items in orders %}
+                                <!-- row -->
+                                <tr>
+                                    <td>
+                                        <a href="/detail?orderid={{items.id}}" class="name">{{items.id}}</a>
+                                    </td>
+                                    <td class="description">
+                                        {{items.time}}
+                                    </td>
+                                    <td class="description">
+                                        {{items.totalprice}}
+                                    </td>
+                                    <td class="description">
+                                        {{items.location}}
+                                    </td>
+                                    <td>
+                                        {% if items.status == '0' %}
+                                        未送达
+                                        {% else %}
+                                        已送达
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end products table -->
+
+                <!-- users table -->
+                <div class="table-wrapper users-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4 id="detail" style="font-size:25px;">详情：{{p}}</h4>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row-fluid">
+                        <table class="table table-hover"  style="font-size:16px;">
+                            <thead>
+                                <tr>
+                                    <th class="span3" style="font-size:18px;">
+                                        商品名
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>类别
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>数量
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>价格
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- row -->
+                               {% for item in details %}
+                                <tr>
+                                    <td>
+                                        <span class="subtext">{{item.name}}</span>
+                                    </td>
+                                    <td>
+                                        {{item.type}}
+                                    </td>
+                                    <td>
+                                        {{item.num}}
+                                    </td>
+                                    <td>
+                                        ￥ {{item.price}}.00
+                                    </td>
+                                </tr>
+                               {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- end users table -->
+                 <div class="table-wrapper products-table section">
+                    <div class="row-fluid head">
+                        <div class="span12">
+                            <h4 style="font-size:25px;">消费统计</h4>
+                        </div>
+                    </div>
+                <br><br>
+                    <div class="row-fluid">
+                        <table class="table table-hover" style="font-size:16px;">
+                            <thead>
+                                <tr>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>商品类型
+                                    </th>
+                                    <th class="span3" style="font-size:18px;">
+                                        <span class="line"></span>消费金额
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for i in result %}
+                                <!-- row -->
+                                <tr>
+                                    <td class="description">
+                                        {{i.0}}
+                                    </td>
+                                    <td class="description">
+                                        ￥{{i.1}}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                 </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end main container -->
+
+	<!-- scripts -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/theme.js" %}"></script>
+
+<div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div>
+</body>
+</html>
